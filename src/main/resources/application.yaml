@@ -11,3 +11,11 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
+sketch2code:
+  vision:
+    model: llava
+    temperature: 0.2
+  code:
+    model: llama3
+    temperature: 0.1

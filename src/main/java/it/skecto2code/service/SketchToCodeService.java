@@ -4,6 +4,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.content.Media;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
 
@@ -12,20 +13,31 @@ public class SketchToCodeService {
 
     private final ChatClient chatClient;
 
+    @Value("${sketch2code.vision.model}")
+    private String visionModel;
+
+    @Value("${sketch2code.vision.temperature}")
+    private double visionTemperature;
+
+    @Value("${sketch2code.code.model}")
+    private String codeModel;
+
+    @Value("${sketch2code.code.temperature}")
+    private double codeTemperature;
+
     public SketchToCodeService(ChatClient.Builder chatClientBuilder) {
         this.chatClient = chatClientBuilder.build();
     }
 
     public String generateHtmlFromSketch(byte[] imageBytes, String contentType) {
         String imageDescription = getImageDescription(imageBytes, contentType);
-
         return getHtmlFromImageDescription(imageDescription);
     }
 
     private String getHtmlFromImageDescription(String imageDescription) {
         OllamaChatOptions codeOptions = OllamaChatOptions.builder()
-                .model("llama3")
-                .temperature(0.1)
+                .model(codeModel)
+                .temperature(codeTemperature)
                 .build();
 
         UserMessage codeUserMessage = UserMessage.builder()
@@ -37,7 +49,9 @@ public class SketchToCodeService {
                 Respond ONLY with HTML5 and Bootstrap 5 code.
                 Do not use Markdown blocks (```html).
                 Do not provide explanations.
-                Your response must begin directly with <!DOCTYPE html>
+                Your response must begin directly with <!DOCTYPE html>.
+                IMPORTANT: Generate ONLY what is described. Do not add elements, sections, or content that are not explicitly mentioned in the description.
+                IMPORTANT: Apply colors exactly as described. If a color is mentioned for any element, use that exact color in the inline style or Bootstrap utility class.
                 """;
 
         return chatClient.prompt()
@@ -50,8 +64,8 @@ public class SketchToCodeService {
 
     private String getImageDescription(byte[] imageBytes, String contentType) {
         OllamaChatOptions visionOptions = OllamaChatOptions.builder()
-                .model("llava")
-                .temperature(0.2)
+                .model(visionModel)
+                .temperature(visionTemperature)
                 .build();
 
         Media media = Media.builder()
@@ -70,6 +84,4 @@ public class SketchToCodeService {
                 .call()
                 .content();
     }
-
-
 }

@@ -25,6 +25,7 @@ public class SketchToCodeService {
     @Value("${sketch2code.code.temperature}")
     private double codeTemperature;
 
+
     public SketchToCodeService(ChatClient.Builder chatClientBuilder) {
         this.chatClient = chatClientBuilder.build();
     }
@@ -73,13 +74,24 @@ public class SketchToCodeService {
                 .data(imageBytes)
                 .build();
 
+        String visionSystemPrompt = """
+                You are a UI analyst. Describe only what is literally visible in the sketch.
+                Output a structured list. For each element include:
+                - Type (button, input, heading, paragraph, image, navbar, table, etc.)
+                - Position (top/middle/bottom and left/center/right)
+                - Label or visible text (if any)
+                - Color (if explicitly visible or written)
+                Never infer or invent elements that are not drawn. Never add suggestions or improvements.
+                """;
+
         UserMessage visionMessage = UserMessage.builder()
-                .text("Analyze this interface sketch and describe in detail the elements (buttons, inputs, text, and colors, if any) and their positions.")
+                .text("List every visible UI element in this sketch following the format in your instructions.")
                 .media(media)
                 .build();
 
         return chatClient.prompt()
                 .options(visionOptions)
+                .system(visionSystemPrompt)
                 .messages(visionMessage)
                 .call()
                 .content();

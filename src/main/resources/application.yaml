@@ -15,7 +15,7 @@ spring:
 sketch2code:
   vision:
     model: llava
-    temperature: 0.2
+    temperature: 0.0
   code:
-    model: llama3
-    temperature: 0.1
+    model: qwen2.5-coder:3b
+    temperature: 0.0

@@ -1,0 +1,13 @@
+spring:
+
+  ai:
+    ollama:
+      base-url: http://192.168.1.19:11434
+      chat:
+        options:
+          model: llama3
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB

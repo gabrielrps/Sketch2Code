@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\gabri\\\\OneDrive\\\\Documenti\\\\workspace\\\\Sketch2Code\" -File | ForEach-Object {$_.Name})"
-    ]
-  }
-}

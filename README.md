@@ -9,20 +9,6 @@ The pipeline runs in two stages:
 1. **Vision** — the LLaVA model receives the sketch image and generates a structured description of every visible UI element, its position, label, and color
 2. **Code** — the Qwen2.5-Coder model receives that description and generates HTML faithful to it, without inventing anything beyond what was described
 
-## Example
-
-### Input sketch
-
-&nbsp;
-
-&nbsp;
-
-### Generated result
-
-&nbsp;
-
-&nbsp;
-
 ## Requirements
 
 - Java 21+
